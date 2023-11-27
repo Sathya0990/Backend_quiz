@@ -1,3 +1,4 @@
+
 from rest_framework import serializers
 from .models import students, teachers, courses
 
@@ -11,23 +12,23 @@ class RegistrationSerializer(serializers.Serializer):
 
     def create(self, validated_data):
 
-            if validated_data['is_teacher']:
-                teacher = teachers.objects.create(
-                    name=validated_data['name'],
-                    email_id=validated_data['email_id'],
-                    password=validated_data['password']
-                )
-                self._handle_courses(teacher, validated_data['courses_list'], is_teacher=True)
-                return teacher
-            
-            else:
-                student = students.objects.create(
-                    name=validated_data['name'],
-                    email_id=validated_data['email_id'],
-                    password=validated_data['password']
-                )
-                self._handle_courses(student, validated_data['courses_list'], is_teacher=False)
-                return student
+        if validated_data['is_teacher']:
+            teacher = teachers.objects.create(
+                name=validated_data['name'],
+                email_id=validated_data['email_id'],
+                password=validated_data['password']
+            )
+            self._handle_courses(teacher, validated_data['courses_list'], is_teacher=True)
+            return teacher
+        
+        else:
+            student = students.objects.create(
+                name=validated_data['name'],
+                email_id=validated_data['email_id'],
+                password=validated_data['password']
+            )
+            self._handle_courses(student, validated_data['courses_list'], is_teacher=False)
+            return student
 
     def _handle_courses(self, user, courses_list, is_teacher=False):
         for course_data in courses_list:
@@ -53,9 +54,7 @@ class RegistrationSerializer(serializers.Serializer):
                         "error": f"Teacher with ID {teacher_id} does not exist. Add later"
                     })
 
-                # # Fetch existing courses for students without creating new ones
-                # existing_course = courses.objects.filter(course_code=course_code)
-                # for course in existing_course:
-                #     print(course)
-                # if existing_course:
-                #     user.courses_list.add(existing_course.course_id)
+                # Fetch existing courses for students without creating new ones
+                existing_course = courses.objects.filter(course_code=course_code)
+                if existing_course.exists():
+                    user.courses_list.add(existing_course.first())
