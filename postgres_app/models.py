@@ -7,10 +7,10 @@ from django.contrib.postgres.fields import ArrayField
 
 # Courses table to mange information about a course
 class courses(models.Model):
-    course_id=models.CharField(primary_key=True, max_length=50)
+    course_id=models.AutoField(primary_key=True)
     course_code=models.IntegerField(unique=True)
     course_name=models.CharField(max_length=50)
-
+    
 
 
 # Students table to manage the information about a student
