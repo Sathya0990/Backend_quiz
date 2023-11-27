@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login'),
     path('teacher/create/', QuizCreateAPIView.as_view(), name='quiz-create'),
     path('course/<str:course_code>/', FetchCourseID.as_view(), name='fetch-course-id'),
-    path('update/<int:quiz_id>/', QuizUpdateAPIView.as_view(), name='quiz-update'),
+    path('update/<int:course_id>/', QuizUpdateAPIView.as_view(), name='quiz-update'),
 
 
 

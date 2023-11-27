@@ -175,9 +175,9 @@ class FetchCourseID(APIView):
         
 
 class QuizUpdateAPIView(APIView):
-    def put(self, request, quiz_id):
+    def put(self, request, course_id):
         # Get the existing quiz instance or return a 404 if it doesn't exist
-        quiz = get_object_or_404(quizzes, quiz_id=quiz_id)
+        quiz = get_object_or_404(quizzes, course_id=course_id)
 
         # Ensure that only the teacher who created the quiz can modify it
         teacher_id = request.data.get('teacher_id')
