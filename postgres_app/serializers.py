@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import students, teachers, courses
+from .models import students, teachers, courses, quizzes
 
 class RegistrationSerializer(serializers.Serializer):
     
@@ -66,3 +66,8 @@ class LoginSerializer(serializers.Serializer):
     email_id = serializers.EmailField()
     password = serializers.CharField()
     is_teacher = serializers.BooleanField(default=False)
+
+class QuizCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = quizzes
+        fields = ['teacher_id', 'course_id', 'quiz_content', 'start_time', 'start_date', 'duration']
