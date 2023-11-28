@@ -166,7 +166,9 @@ output:
 }
 
 
-6. http://127.0.0.1:8000/quiz/courses/
+6. fetch course and teacher courses_info
+
+http://127.0.0.1:8000/quiz/courses/
 get 
 
 output:
@@ -184,3 +186,18 @@ output:
         "teachers__teacher_id": 8
     }
 ]
+
+7. delete quiz api
+
+ http://127.0.0.1:8000/quiz/delete/15/
+delete
+
+Input:
+    {
+        "course_id": 15,
+        "teacher_id": 8
+    }
+output:
+{
+    "message": "Quiz deleted successfully"
+}

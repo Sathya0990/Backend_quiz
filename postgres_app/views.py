@@ -165,15 +165,6 @@ class QuizCreateAPIView(APIView):
 
 
 
-class FetchCourseID(APIView):
-    def get(self, request, course_code):
-        try:
-            course = courses.objects.get(course_code=course_code)
-            return Response({'course_id': course.course_id}, status=status.HTTP_200_OK)
-        except courses.DoesNotExist:
-            return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
-        
-
 class QuizUpdateAPIView(APIView):
     def put(self, request, course_id):
         # Get the existing quiz instance or return a 404 if it doesn't exist
@@ -191,6 +182,37 @@ class QuizUpdateAPIView(APIView):
             return Response({'message': 'Quiz updated successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class QuizDeleteAPIView(APIView):
+    def delete(self, request, course_id):
+        # Get the quiz instance or return a 404 if it doesn't exist
+        try:
+            quiz = quizzes.objects.get(course_id=course_id)
+        except quizzes.DoesNotExist:
+            return Response({'message': 'Quiz does not exists'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Ensure that only the teacher who created the quiz can delete it
+        teacher_id = request.data.get('teacher_id')
+        if quiz.teacher_id.teacher_id != teacher_id:
+            return Response({'message': 'Unauthorized to delete this quiz'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Delete the quiz
+        quiz.delete()
+        return Response({'message': 'Quiz deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+class FetchCourseID(APIView):
+    def get(self, request, course_code):
+        try:
+            course = courses.objects.get(course_code=course_code)
+            return Response({'course_id': course.course_id}, status=status.HTTP_200_OK)
+        except courses.DoesNotExist:
+            return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+
 class CourseTeacherAPIView(APIView):
     def get(self, request):
         course_teacher_info = courses.objects.select_related('teachers').values(
@@ -202,3 +224,4 @@ class CourseTeacherAPIView(APIView):
         )
         
         return Response(course_teacher_info)
+
