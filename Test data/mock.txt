@@ -201,3 +201,42 @@ output:
 {
     "message": "Quiz deleted successfully"
 }
+
+8. Question Api for student 
+
+http://127.0.0.1:8000/quiz/student/15/questions/
+
+get 
+
+Here 15 is course_id which you can get from login api
+ 
+
+Output:
+
+{
+    "questions": [
+        {
+            "options": [
+                "3",
+                "4",
+                "5"
+            ],
+            "question": "What is 2 + 2?",
+        },
+        {
+            "options": [
+                "Madrid",
+                "Paris",
+                "Berlin"
+            ],
+            "question": "What is the capital of France?",
+        },
+        {
+            "options": [
+                "True",
+                "False"
+            ],
+            "question": "Is the sky blue?",
+        }
+    ]
+}

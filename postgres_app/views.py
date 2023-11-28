@@ -229,3 +229,25 @@ class CourseTeacherAPIView(APIView):
         
         return Response(course_teacher_info)
 
+
+class StudentCourseQuestionsView(APIView):
+    def get(self, request, course_id):
+        try:
+            course = courses.objects.get(pk=course_id)
+            quizzes_for_course = quizzes.objects.filter(course_id=course)
+            
+            questions = []
+            for quiz in quizzes_for_course:
+
+                quiz_questions=quiz.quiz_content
+                for q in quiz_questions:
+                # Exclude correct answer
+                    q.pop('correct_answer', None)  
+                    questions.append(q)
+                # questions.extend(quiz.quiz_content)  
+            
+            
+
+            return Response({'questions': questions})
+        except courses.DoesNotExist:
+            return Response({"message": "Course not found"}, status=status.HTTP_404_NOT_FOUND)

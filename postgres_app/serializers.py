@@ -83,3 +83,9 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = courses
         fields = ['course_code', 'course_name', 'teacher_name', 'teacher_id']
+
+
+class QuizQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = quizzes
+        fields = ['quiz_content']

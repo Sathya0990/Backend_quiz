@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path,include
-from .views import Registration,LoginAPIView,QuizCreateAPIView,FetchCourseID,QuizUpdateAPIView,CourseTeacherAPIView,QuizDeleteAPIView
+from .views import Registration,LoginAPIView,QuizCreateAPIView,FetchCourseID,QuizUpdateAPIView,CourseTeacherAPIView,QuizDeleteAPIView,StudentCourseQuestionsView
 
 urlpatterns = [
 
@@ -11,7 +11,8 @@ urlpatterns = [
     path('delete/<int:course_id>/', QuizDeleteAPIView.as_view(), name='quiz-delete'),
     path('courses/', CourseTeacherAPIView.as_view(), name='courses'),
     path('course/<str:course_code>/', FetchCourseID.as_view(), name='fetch-course-id'),
-
+    path('student/<int:course_id>/questions/', StudentCourseQuestionsView.as_view(), name='studentquestions'),
+    
 
 
 ]
