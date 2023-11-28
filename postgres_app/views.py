@@ -47,6 +47,8 @@ class LoginAPIView(APIView):
                     for course in teach_list:
                         quizzes_info = quizzes.objects.filter(teacher_id=teacher, course_id=course)
                         course_info = {
+                            'course_code':course.course_id,
+                            'course_id':course.course_id,
                             'course_name': course.course_name,
                             'quizzes_info': [{
                                 'start_date': quiz.start_date,
@@ -67,6 +69,8 @@ class LoginAPIView(APIView):
                         teacher_of_course = course.teachers_set.first()  # Fetching teacher for the course
                         quizzes_info = quizzes.objects.filter(teacher_id=teacher_of_course, course_id=course)
                         course_info = {
+                            'course_code':course.course_code,
+                            'course_id':course.course_id,
                             'course_name': course.course_name,
                             'quizzes_info': [{
                                 'start_date': quiz.start_date,
