@@ -43,18 +43,32 @@ For teachers,
 
 Output:
 {
+    "teacher_info": {
+        "student_id": 8,
+        "name": "Jane Smith",
+        "email_id": "jane@example.com"
+    },
     "courses_info": [
         {
+            "course_code": 15,
+            "course_id": 15,
             "course_name": "Hi",
-            "quizzes_info": []
+            "quizzes_info": [
+                {
+                    "start_date": "2023-12-01",
+                    "start_time": "10:00 AM",
+                    "duration": "1 hour"
+                }
+            ]
         },
         {
+            "course_code": 16,
+            "course_id": 16,
             "course_name": "name",
             "quizzes_info": []
         }
     ]
 }
-
 
 For students,
 
@@ -68,18 +82,32 @@ For students,
 output:
 
 {
+    "student_info": {
+        "student_id": 14,
+        "name": "John Doe",
+        "email_id": "john@example.com"
+    },
     "courses_info": [
         {
+            "course_code": 201,
+            "course_id": 15,
             "course_name": "Hi",
-            "quizzes_info": []
+            "quizzes_info": [
+                {
+                    "start_date": "2023-12-01",
+                    "start_time": "10:00 AM",
+                    "duration": "1 hour"
+                }
+            ]
         },
         {
+            "course_code": 202,
+            "course_id": 16,
             "course_name": "name",
             "quizzes_info": []
         }
     ]
 }
-
 
 3. 
 
