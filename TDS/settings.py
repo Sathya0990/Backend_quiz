@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'corsheaders'
     "postgres_app",
 ]
 
@@ -51,6 +52,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "TDS.urls"
+
+CORS_ALLOW_ALL_ORIGINS = True 
 
 TEMPLATES = [
     {
