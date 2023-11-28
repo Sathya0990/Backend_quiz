@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView,Response
-from .serializers import RegistrationSerializer, LoginSerializer, QuizCreateSerializer,CourseTeacherSerializer
-from .models import students, teachers, quizzes, courses
+from .serializers import RegistrationSerializer, LoginSerializer, QuizCreateSerializer,CourseTeacherSerializer,studentserializer
+from .models import students, teachers, quizzes, courses, scores
 from rest_framework import status
 import json 
 from django.shortcuts import get_object_or_404
@@ -43,6 +43,12 @@ class LoginAPIView(APIView):
                 try:
                     teacher = teachers.objects.get(email_id=email, password=password)
                     teach_list = teacher.teach_list.all()
+                    # print(teacher)
+                    teacher_info={
+                    'student_id':teacher.teacher_id,
+                    'name':teacher.name,
+                    'email_id':teacher.email_id
+                    }
                     courses_info = []
                     for course in teach_list:
                         quizzes_info = quizzes.objects.filter(teacher_id=teacher, course_id=course)
@@ -57,12 +63,18 @@ class LoginAPIView(APIView):
                             } for quiz in quizzes_info]
                         }
                         courses_info.append(course_info)
-                    return Response({'courses_info': courses_info}, status=status.HTTP_200_OK)
+                    return Response({'teacher_info':teacher_info,'courses_info': courses_info}, status=status.HTTP_200_OK)
                 except teachers.DoesNotExist:
                     return Response({'error': 'Invalid teacher credentials'}, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 try:
                     student = students.objects.get(email_id=email, password=password)
+                    # print(student.data)
+                    student_info={
+                            'student_id':student.student_id,
+                            'name':student.name,
+                            'email_id':student.email_id
+                    }
                     courses_list = student.courses_list.all()
                     courses_info = []
                     for course in courses_list:
@@ -79,7 +91,7 @@ class LoginAPIView(APIView):
                             } for quiz in quizzes_info]
                         }
                         courses_info.append(course_info)
-                    return Response({'courses_info': courses_info}, status=status.HTTP_200_OK)
+                    return Response({'student_info':student_info,'courses_info': courses_info}, status=status.HTTP_200_OK)
                 except students.DoesNotExist:
                     return Response({'error': 'Invalid student credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -251,3 +263,37 @@ class StudentCourseQuestionsView(APIView):
             return Response({'questions': questions})
         except courses.DoesNotExist:
             return Response({"message": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class StudentQuizAnswerView(APIView):
+
+    def post(self, request, course_id):
+        try:
+            quiz = quizzes.objects.get(course_id=course_id)
+            quiz_questions = quiz.quiz_content
+            user_responses = request.data['answers']
+            
+            total_questions = len(quiz_questions)
+            correct_answers = 0
+            
+            for user_response in user_responses:
+                question = user_response['question']
+                chosen_option = user_response['chosen_option']
+                
+                for quiz_question in quiz_questions:
+                    if quiz_question['question'] == question and quiz_question['correct_answer'] == chosen_option:
+                        correct_answers += 1
+                        break
+            
+            final_score_percentage = (correct_answers / total_questions) * 100
+            final_score= str(correct_answers)+ '/'+ str(total_questions)
+            correct_answers=correct_answers
+            return Response(
+                            {'percentage': final_score_percentage,
+                             'final_score':final_score,
+                             'correct_answers':correct_answers,
+                             'total_questions':total_questions
+                             }, status=status.HTTP_200_OK)
+        
+        except quizzes.DoesNotExist:
+                return Response({"message": "Quiz not found for this course"}, status=status.HTTP_404_NOT_FOUND)        

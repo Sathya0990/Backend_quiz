@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path,include
-from .views import Registration,LoginAPIView,QuizCreateAPIView,FetchCourseID,QuizUpdateAPIView,CourseTeacherAPIView,QuizDeleteAPIView,StudentCourseQuestionsView
+from .views import Registration,LoginAPIView,QuizCreateAPIView,FetchCourseID,QuizUpdateAPIView,CourseTeacherAPIView,QuizDeleteAPIView,StudentCourseQuestionsView,StudentQuizAnswerView
 
 urlpatterns = [
 
@@ -12,7 +12,7 @@ urlpatterns = [
     path('courses/', CourseTeacherAPIView.as_view(), name='courses'),
     path('course/<str:course_code>/', FetchCourseID.as_view(), name='fetch-course-id'),
     path('student/<int:course_id>/questions/', StudentCourseQuestionsView.as_view(), name='studentquestions'),
+    path('student/<course_id>/answers/', StudentQuizAnswerView.as_view(), name='studentanswers'),
     
-
 
 ]

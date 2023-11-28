@@ -89,3 +89,8 @@ class QuizQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = quizzes
         fields = ['quiz_content']
+
+class studentserializer(serializers.ModelSerializer):
+    class Meta:
+        model=students 
+        fields='__all__'
