@@ -1,0 +1,186 @@
+1. Registration end point
+
+
+for teachers,
+
+
+{
+  "name": "Jane Smith",
+  "email_id": "jane@example.com",
+  "password": "yourpassword",
+  "is_teacher": true,
+  "courses_list": [
+    {"course_code": 201, "course_name":"Hi"},
+    {"course_code": 202, "course_name":"name"}
+  ]
+}
+
+
+for students,
+
+{
+  "name": "John Doe",
+  "email_id": "john@example.com",
+  "password": "yourpassword",
+  "is_teacher": false,
+  "courses_list": [
+    {"course_code": 201, "teacher_id": 1},
+    {"course_code": 202, "teacher_id": 2}
+  ]
+}
+
+
+2. Login end point
+
+For teachers,
+
+{
+  "email_id": "jane@example.com",
+  "password": "yourpassword",
+  "is_teacher": true
+ 
+}
+
+Output:
+{
+    "courses_info": [
+        {
+            "course_name": "Hi",
+            "quizzes_info": []
+        },
+        {
+            "course_name": "name",
+            "quizzes_info": []
+        }
+    ]
+}
+
+
+For students,
+
+{
+  "email_id": "john@example.com",
+  "password": "yourpassword",
+  "is_teacher": false
+}
+
+
+output:
+
+{
+    "courses_info": [
+        {
+            "course_name": "Hi",
+            "quizzes_info": []
+        },
+        {
+            "course_name": "name",
+            "quizzes_info": []
+        }
+    ]
+}
+
+
+3. 
+
+
+creation of quiz end point
+
+
+single answer 
+{
+    "teacher_id": 8,
+    "course_id": 15,
+    "quiz_content": [
+        {"question": "What is 2 + 2?", "options": ["3", "4", "5"], "correct_answer": "4"},
+        {"question": "What is the capital of France?", "options": ["Madrid", "Paris", "Berlin"], "correct_answer": "Paris" }
+    ],
+    "start_time": "10:00 AM",
+    "start_date": "2023-12-01",
+    "duration": "1 hour"
+}
+
+multiple answers
+
+
+{
+    "teacher_id": 8,
+    "course_id": 15,
+    "quiz_content": [
+        {"question": "What is 2 + 2?", "options": ["3", "4", "5"], "correct_answer": "4"},
+        {"question": "What is the capital of France?", "options": ["Madrid", "Paris", "Berlin"], "correct_answer": ["Paris","France"] }
+    ],
+    "start_time": "10:00 AM",
+    "start_date": "2023-12-01",
+    "duration": "1 hour"
+}
+
+combined
+
+{
+    "teacher_id": 8,
+    "course_id": 15,
+    "quiz_content": [
+        {"question": "What is 2 + 2?", "options": ["3", "4", "5"], "correct_answer": "4"},
+        {"question": "What is the capital of France?", "options": ["Madrid", "Paris", "Berlin"], "correct_answer": ["Paris","France"] },
+        {"question": "Is the sky blue?", "options": ["True", "False"], "correct_answer": "True" }
+
+    ],
+    "start_time": "10:00 AM",
+    "start_date": "2023-12-01",
+    "duration": "1 hour"
+}
+
+
+4. fetch course_id based on course_code 
+
+get:
+http://127.0.0.1:8000/quiz/course/201
+
+output:
+{
+    "course_id": 15
+}
+
+5. update quiz 
+
+put: http://127.0.0.1:8000/quiz/update/15(course_id_)/
+
+Input:
+{
+    "teacher_id": 8,
+    "course_id": 15,
+    "quiz_content": [
+        {"question": "What is 2 + 2?", "options": ["3", "4", "5"], "correct_answer": "4"},
+        {"question": "What is the capital of France?", "options": ["Madrid", "Paris", "Berlin"], "correct_answer": ["Paris"] }
+    ],
+    "start_time": "10:00 AM",
+    "start_date": "2023-12-01",
+    "duration": "1 hour"
+}
+
+
+output:
+{
+    message:"quiz updated successfully"
+}
+
+
+6. http://127.0.0.1:8000/quiz/courses/
+get 
+
+output:
+[
+    {
+        "course_code": 201,
+        "course_name": "Hi",
+        "teachers__name": "Jane Smith",
+        "teachers__teacher_id": 8
+    },
+    {
+        "course_code": 202,
+        "course_name": "name",
+        "teachers__name": "Jane Smith",
+        "teachers__teacher_id": 8
+    }
+]

@@ -71,3 +71,15 @@ class QuizCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = quizzes
         fields = ['teacher_id', 'course_id', 'quiz_content', 'start_time', 'start_date', 'duration']
+
+
+
+class CourseTeacherSerializer(serializers.ModelSerializer):
+    course_code = serializers.IntegerField(source='course_code')
+    course_name = serializers.CharField(source='course_name')
+    teacher_name = serializers.CharField(source='teacher.name')
+    teacher_id = serializers.IntegerField(source='teacher.teacher_id')
+
+    class Meta:
+        model = courses
+        fields = ['course_code', 'course_name', 'teacher_name', 'teacher_id']

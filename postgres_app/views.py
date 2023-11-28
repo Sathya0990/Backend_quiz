@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView,Response
-from .serializers import RegistrationSerializer, LoginSerializer, QuizCreateSerializer
+from .serializers import RegistrationSerializer, LoginSerializer, QuizCreateSerializer,CourseTeacherSerializer
 from .models import students, teachers, quizzes, courses
 from rest_framework import status
 import json 
@@ -190,3 +190,14 @@ class QuizUpdateAPIView(APIView):
             serializer.save()
             return Response({'message': 'Quiz updated successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CourseTeacherAPIView(APIView):
+    def get(self, request):
+        course_teacher_info = courses.objects.select_related('teachers').values(
+            'course_code',
+            'course_name',
+            'teachers__name',
+            'teachers__teacher_id'
+        )
+        
+        return Response(course_teacher_info)
