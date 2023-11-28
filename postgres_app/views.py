@@ -195,6 +195,7 @@ class CourseTeacherAPIView(APIView):
     def get(self, request):
         course_teacher_info = courses.objects.select_related('teachers').values(
             'course_code',
+            'course_id',
             'course_name',
             'teachers__name',
             'teachers__teacher_id'
