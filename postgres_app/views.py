@@ -48,7 +48,7 @@ class LoginAPIView(APIView):
                     teach_list = teacher.teach_list.all()
                     # print(teacher)
                     teacher_info={
-                    'student_id':teacher.teacher_id,
+                    'teacher_id':teacher.teacher_id,
                     'name':teacher.name,
                     'email_id':teacher.email_id
                     }
