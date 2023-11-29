@@ -5,6 +5,9 @@ from .models import students, teachers, quizzes, courses, scores
 from rest_framework import status
 import json 
 from django.shortcuts import get_object_or_404
+from django.db.models import Max, Min
+from statistics import mean, median, mode
+
 
 
 # Create your views here.
@@ -305,4 +308,40 @@ class StudentQuizAnswerView(APIView):
         except students.DoesNotExist:
             return Response({"message": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
         except quizzes.DoesNotExist:
-            return Response({"message": "Quiz not found for this course"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "Quiz not found for this course"}, status=status.HTTP_404_NOT_FOUND) 
+
+
+class ClassStatisticsView(APIView):
+    def get(self, request, course_id):
+        try:
+            # Fetch data
+            quiz = quizzes.objects.get(course_id=course_id)
+            scores_data = scores.objects.filter(course_id=course_id)
+
+            # Calculate statistics
+            no_of_students_registered = students.objects.filter(courses_list=quiz.course_id).count()
+            no_of_students_attempted_quiz = scores_data.count()
+            no_of_students_left = no_of_students_registered - no_of_students_attempted_quiz
+            highest_score = scores_data.aggregate(Max('score'))['score__max']
+            lowest_score = scores_data.aggregate(Min('score'))['score__min']
+            all_scores = scores_data.values_list('score', flat=True)
+            mean_score = mean(all_scores)
+            median_score = median(all_scores)
+            mode_score = mode(all_scores)
+
+            # Prepare response
+            class_stats = {
+                "no_of_students_registered": no_of_students_registered,
+                "no_of_students_attempted_quiz": no_of_students_attempted_quiz,
+                "no_of_students_left": no_of_students_left,
+                "highest_score": highest_score,
+                "lowest_score": lowest_score,
+                "mean_score": mean_score,
+                "median_score": median_score,
+                "mode_score": mode_score
+            }
+
+            return Response(class_stats, status=200)
+        
+        except quizzes.DoesNotExist:
+            return Response({"message": "Quiz not found for this course"}, status=404)

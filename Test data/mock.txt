@@ -297,3 +297,26 @@ output:
     "correct_answers": 2,
     "total_questions": 3
 }
+
+
+10. stats for teacher view 
+
+http://127.0.0.1:8000/quiz/teacher/statsview/15/
+
+get 
+
+15->course_id 
+
+
+
+output:
+{
+    "no_of_students_registered": 1,
+    "no_of_students_attempted_quiz": 1,
+    "no_of_students_left": 0,
+    "highest_score": 2,
+    "lowest_score": 2,
+    "mean_score": 2,
+    "median_score": 2,
+    "mode_score": 2
+}
