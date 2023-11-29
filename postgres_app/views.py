@@ -282,13 +282,51 @@ class StudentQuizAnswerView(APIView):
             
             for user_response in user_responses:
                 question = user_response['question']
-                chosen_option = user_response['chosen_option']
                 
+                if isinstance(user_response,list):
+                    chosen_option = set(user_response['chosen_option'])
+                else:
+                    chosen_option=user_response['chosen_option']
+                
+                # print(chosen_option)
+
+                # for quiz_question in quiz_questions:
+                #     if quiz_question['question'] == question:
+                #         if isinstance(correct_options,list):
+                #             correct_options = set(quiz_question['correct_answer'])
+                #         else:
+                #              correct_options = quiz_question['correct_answer']
+                #         print(correct_options)
+                #     # Partial grading for multiple-answer questions
+                #         if chosen_option.issuperset(correct_options):  
+                #             correct_answers += 1 / len(correct_options)  
+                #         break
+
                 for quiz_question in quiz_questions:
-                    if quiz_question['question'] == question and quiz_question['correct_answer'] == chosen_option:
-                        correct_answers += 1
+                    if quiz_question['question'] == question:
+                        correct_answer = quiz_question['correct_answer']
+                        
+                        # print(type(correct_answer), type(chosen_option), type(chosen_option)!=type(correct_answer), chosen_option,correct_answer)
+                        # print(correct_answer)
+                        # Handling single-answer and multiple-answer questions differently
+                        if  type(correct_answer)!=type(chosen_option) or isinstance(chosen_option, list):
+                        
+                            if type(correct_answer)!=type(chosen_option):
+                                if chosen_option in correct_answer:
+                                    correct_answers += 1 / len(correct_answer)
+                            else:
+                                for option in chosen_option:
+                                    if option in correct_answer:
+                                        correct_answers += 1 / len(correct_answer)
+                                    # print(chosen_option,correct_answer)
+                        else:
+                            if chosen_option == correct_answer:
+                                correct_answers += 1
+                        
                         break
-            
+
+
+
             final_score_percentage = (correct_answers / total_questions) * 100
             final_score = f"{correct_answers}/{total_questions}"
             
