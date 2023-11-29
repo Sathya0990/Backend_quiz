@@ -12,7 +12,7 @@ urlpatterns = [
     path('courses/', CourseTeacherAPIView.as_view(), name='courses'),
     path('course/<str:course_code>/', FetchCourseID.as_view(), name='fetch-course-id'),
     path('student/<int:course_id>/questions/', StudentCourseQuestionsView.as_view(), name='studentquestions'),
-    path('student/<course_id>/answers/', StudentQuizAnswerView.as_view(), name='studentanswers'),
+    path('student/<course_id>/<student_id>/answers/', StudentQuizAnswerView.as_view(), name='studentanswers'),
     
 
 ]

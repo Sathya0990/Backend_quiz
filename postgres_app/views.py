@@ -265,10 +265,11 @@ class StudentCourseQuestionsView(APIView):
             return Response({"message": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
         
 
-class StudentQuizAnswerView(APIView):
 
-    def post(self, request, course_id):
+class StudentQuizAnswerView(APIView):
+    def post(self, request, course_id, student_id):
         try:
+            student = students.objects.get(student_id=student_id)
             quiz = quizzes.objects.get(course_id=course_id)
             quiz_questions = quiz.quiz_content
             user_responses = request.data['answers']
@@ -286,14 +287,22 @@ class StudentQuizAnswerView(APIView):
                         break
             
             final_score_percentage = (correct_answers / total_questions) * 100
-            final_score= str(correct_answers)+ '/'+ str(total_questions)
-            correct_answers=correct_answers
+            final_score = f"{correct_answers}/{total_questions}"
+            
+            # Storing in scores table
+            scores.objects.create(student_id=student, course_id=quiz.course_id, score=correct_answers)
+            
             return Response(
-                            {'percentage': final_score_percentage,
-                             'final_score':final_score,
-                             'correct_answers':correct_answers,
-                             'total_questions':total_questions
-                             }, status=status.HTTP_200_OK)
+                {
+                    'percentage': final_score_percentage,
+                    'final_score': final_score,
+                    'correct_answers': correct_answers,
+                    'total_questions': total_questions
+                }, 
+                status=status.HTTP_200_OK
+            )
         
+        except students.DoesNotExist:
+            return Response({"message": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
         except quizzes.DoesNotExist:
-                return Response({"message": "Quiz not found for this course"}, status=status.HTTP_404_NOT_FOUND)        
+            return Response({"message": "Quiz not found for this course"}, status=status.HTTP_404_NOT_FOUND)

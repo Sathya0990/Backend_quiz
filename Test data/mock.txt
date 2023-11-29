@@ -270,4 +270,30 @@ Output:
 }
 
 
-9. 
+9. answer validation  based on course_id,student_id 
+
+http://127.0.0.1:8000/quiz/student/15/14/answers/
+post 
+
+15->course_id 
+14->student_id 
+
+
+
+Input:
+{
+    "answers": [
+        {"question": "What is 2 + 2?", "chosen_option": "4"},
+        {"question": "What is the capital of France?", "chosen_option": "Paris"},
+        {"question": "Is the sky blue?", "chosen_option": "True"}
+    ]
+}
+
+output:
+
+{
+    "percentage": 66.66666666666666,
+    "final_score": "2/3",
+    "correct_answers": 2,
+    "total_questions": 3
+}
