@@ -56,7 +56,7 @@ class LoginAPIView(APIView):
                     for course in teach_list:
                         quizzes_info = quizzes.objects.filter(teacher_id=teacher, course_id=course)
                         course_info = {
-                            'course_code':course.course_id,
+                            'course_code':course.course_code,
                             'course_id':course.course_id,
                             'course_name': course.course_name,
                             'quizzes_info': [{
@@ -185,9 +185,9 @@ class QuizCreateAPIView(APIView):
 
 
 class QuizUpdateAPIView(APIView):
-    def put(self, request, course_id):
+    def put(self, request, course_id,teacher_id):
         # Get the existing quiz instance or return a 404 if it doesn't exist
-        quiz = get_object_or_404(quizzes, course_id=course_id)
+        quiz = get_object_or_404(quizzes, course_id=course_id,teacher_id=teacher_id)
 
         # Ensure that only the teacher who created the quiz can modify it
         teacher_id = request.data.get('teacher_id')
@@ -203,21 +203,48 @@ class QuizUpdateAPIView(APIView):
 
 
 class QuizDeleteAPIView(APIView):
-    def delete(self, request, course_id):
+    def delete(self, request, course_id,teacher_id):
         # Get the quiz instance or return a 404 if it doesn't exist
         try:
-            quiz = quizzes.objects.get(course_id=course_id)
+            quiz = quizzes.objects.get(course_id=course_id,teacher_id=teacher_id)
         except quizzes.DoesNotExist:
             return Response({'message': 'Quiz does not exists'}, status=status.HTTP_404_NOT_FOUND)
 
         # Ensure that only the teacher who created the quiz can delete it
-        teacher_id = request.data.get('teacher_id')
+        # teacher_id = request.data.get('teacher_id')
+        print(teacher_id, quiz.teacher_id.teacher_id)
         if quiz.teacher_id.teacher_id != teacher_id:
             return Response({'message': 'Unauthorized to delete this quiz'}, status=status.HTTP_403_FORBIDDEN)
 
         # Delete the quiz
         quiz.delete()
-        return Response({'message': 'Quiz deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+        teacher = teachers.objects.get(teacher_id=teacher_id)
+        teach_list = teacher.teach_list.all()
+        # print(teacher)
+        teacher_info={
+        'teacher_id':teacher.teacher_id,
+        'name':teacher.name,
+        'email_id':teacher.email_id
+        }
+        courses_info = []
+        for course in teach_list:
+            quizzes_info = quizzes.objects.filter(teacher_id=teacher, course_id=course)
+            course_info = {
+                'course_code':course.course_id,
+                'course_id':course.course_id,
+                'course_name': course.course_name,
+                'quizzes_info': [{
+                    'start_date': quiz.start_date,
+                    'start_time': quiz.start_time,
+                    'duration': quiz.duration
+                } for quiz in quizzes_info]
+            }
+            courses_info.append(course_info)
+        return Response({'message': 'Quiz deleted successfully','teacher_info':teacher_info,'courses_info': courses_info}, status=status.HTTP_204_NO_CONTENT)
+        
+
+        # return Response({}, status=status.)
 
 
 
