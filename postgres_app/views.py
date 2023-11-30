@@ -7,6 +7,7 @@ import json
 from django.shortcuts import get_object_or_404
 from django.db.models import Max, Min
 from statistics import mean, median, mode
+from decimal import Decimal
 
 
 
@@ -114,133 +115,6 @@ class LoginAPIView(APIView):
                 return Response({'error': 'Invalid student credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# class LoginAPIView(APIView):
-
-#     def post(self, request):
-#         serializer = LoginSerializer(data=request.data)
-#         if serializer.is_valid():
-#             email = serializer.validated_data['email_id']
-#             password = serializer.validated_data['password']
-#             is_teacher = serializer.validated_data['is_teacher']
-
-#             if is_teacher:
-#                 try:
-#                     teacher = teachers.objects.get(email_id=email, password=password)
-#                     teach_list = teacher.teach_list.all()
-#                     # print(teacher)
-#                     teacher_info={
-#                     'teacher_id':teacher.teacher_id,
-#                     'name':teacher.name,
-#                     'email_id':teacher.email_id
-#                     }
-#                     courses_info = []
-#                     for course in teach_list:
-#                         quizzes_info = quizzes.objects.filter(teacher_id=teacher, course_id=course)
-#                         course_info = {
-#                             'course_code':course.course_code,
-#                             'course_id':course.course_id,
-#                             'course_name': course.course_name,
-#                             'quizzes_info': [{
-#                                 'start_date': quiz.start_date,
-#                                 'start_time': quiz.start_time,
-#                                 'duration': quiz.duration
-#                             } for quiz in quizzes_info]
-#                         }
-#                         courses_info.append(course_info)
-#                     return Response({'teacher_info':teacher_info,'courses_info': courses_info}, status=status.HTTP_200_OK)
-#                 except teachers.DoesNotExist:
-#                     return Response({'error': 'Invalid teacher credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-#             else:
-#                 try:
-#                     student = students.objects.get(email_id=email, password=password)
-#                     # print(student.data)
-#                     student_info={
-#                             'student_id':student.student_id,
-#                             'name':student.name,
-#                             'email_id':student.email_id
-#                     }
-#                     courses_list = student.courses_list.all()
-#                     courses_info = []
-#                     for course in courses_list:
-#                         teacher_of_course = course.teachers_set.first()  # Fetching teacher for the course
-#                         quizzes_info = quizzes.objects.filter(teacher_id=teacher_of_course, course_id=course)
-#                         course_info = {
-#                             'course_code':course.course_code,
-#                             'course_id':course.course_id,
-#                             'course_name': course.course_name,
-#                             'quizzes_info': [{
-#                                 'start_date': quiz.start_date,
-#                                 'start_time': quiz.start_time,
-#                                 'duration': quiz.duration
-#                             } for quiz in quizzes_info]
-                            
-#                         }
-
-#                     all_scores = scores.objects.filter(student_id=student)
-                    
-#                     # Prepare a list of score information
-#                     scores_info = []
-#                     for score in all_scores:
-#                         scores_info.append({
-#                             'course_id': scores.course_id.course_id,
-#                             'quiz_attempted': score.quiz_attempted,
-#                             'attempts_count': score.attempts_count,
-#                             'score': score.score
-#                         })
-
-
-#                     courses_info.append(course_info)
-#                     return Response({'student_info':student_info,'courses_info': courses_info, 'scores_info':scores_info}, status=status.HTTP_200_OK)
-#                 except students.DoesNotExist:
-#                     return Response({'error': 'Invalid student credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# class QuizCreateAPIView(APIView):
-#     def post(self, request):
-#         teacher_id = request.data.get('teacher_id')
-#         teacher_courses = teachers.objects.get(teacher_id=teacher_id).teach_list.all()
-        
-#         print(teacher_courses)
-#         course_id = request.data.get('course_id')
-        
-#         if int(course_id) not in [course.course_id for course in teacher_courses]:
-#             return Response({'message': 'Teacher not authorized for this course'}, status=status.HTTP_403_FORBIDDEN)
-        
-#         serializer = QuizCreateSerializer(data=request.data)
-#         if serializer.is_valid():
-            
-#             quiz_content = serializer.validated_data['quiz_content']
-#             if len(quiz_content) < 10:
-#                 return Response({'error': 'Number of questions should be at least 10.'}, status=status.HTTP_400_BAD_REQUEST)
-#             serializer.save()
-#             return Response({'message': 'Quiz created successfully'}, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# class QuizCreateAPIView(APIView):
-
-#     def post(self, request):
-#         teacher_id = request.data.get('teacher_id')
-#         teacher = teachers.objects.get(teacher_id=teacher_id)
-#         teacher_courses = teacher.teach_list.all()
-        
-        
-#         print(f"Teacher's courses: {[course.course_id for course in teacher_courses]}")
-        
-#         course_id = request.data.get('course_id')
-#         print(f"Requested course ID: {course_id}")
-        
-
-#         if course_id not in [course.course_id for course in teacher_courses]:
-#             return Response({'message': 'Teacher not authorized for this course'}, status=status.HTTP_403_FORBIDDEN)
-        
-#         serializer = QuizCreateSerializer(data=request.data)
-#         if serializer.is_valid():
-#             quiz_content = serializer.validated_data['quiz_content']
-#             # if len(quiz_content) < 10:
-#             #     return Response({'error': 'Number of questions should be at least 10.'}, status=status.HTTP_400_BAD_REQUEST)
-#             serializer.save()
-#             return Response({'message': 'Quiz created successfully'}, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class QuizCreateAPIView(APIView):
@@ -525,38 +399,52 @@ class StudentQuizAnswerView(APIView):
         except quizzes.DoesNotExist:
             return Response({"message": "Quiz not found for this course"}, status=status.HTTP_404_NOT_FOUND) 
 
-
 class ClassStatisticsView(APIView):
     def get(self, request, course_id):
         try:
-            # Fetch data
             quiz = quizzes.objects.get(course_id=course_id)
             scores_data = scores.objects.filter(course_id=course_id)
 
-            # Calculate statistics
             no_of_students_registered = students.objects.filter(courses_list=quiz.course_id).count()
             no_of_students_attempted_quiz = scores_data.count()
             no_of_students_left = no_of_students_registered - no_of_students_attempted_quiz
-            highest_score = scores_data.aggregate(Max('score'))['score__max']
-            lowest_score = scores_data.aggregate(Min('score'))['score__min']
-            all_scores = scores_data.values_list('score', flat=True)
+
+            # Convert score strings to Decimal type for statistical calculations
+            all_scores = [Decimal(score.score) for score in scores_data]
             mean_score = mean(all_scores)
             median_score = median(all_scores)
             mode_score = mode(all_scores)
 
-            # Prepare response
+            # Retrieve top and bottom scores
+            top_scores = scores_data.order_by('-score')[:5]
+            bottom_scores = scores_data.order_by('score')[:5]
+
             class_stats = {
                 "no_of_students_registered": no_of_students_registered,
                 "no_of_students_attempted_quiz": no_of_students_attempted_quiz,
                 "no_of_students_left": no_of_students_left,
-                "highest_score": highest_score,
-                "lowest_score": lowest_score,
                 "mean_score": mean_score,
                 "median_score": median_score,
-                "mode_score": mode_score
+                "mode_score": mode_score,
+                "top_5_scores": [
+                    {
+                        "score_id": score.id,
+                        "student_id": score.student_id.student_id,
+                        "score": score.score
+                    }
+                    for score in top_scores
+                ],
+                "bottom_5_scores": [
+                    {
+                        "score_id": score.id,
+                        "student_id": score.student_id.student_id,
+                        "score": score.score
+                    }
+                    for score in bottom_scores
+                ]
             }
 
-            return Response(class_stats, status=200)
+            return Response(class_stats, status=status.HTTP_200_OK)
         
         except quizzes.DoesNotExist:
-            return Response({"message": "Quiz not found for this course"}, status=404)
+            return Response({"message": "Quiz not found for this course"}, status=status.HTTP_404_NOT_FOUND)
