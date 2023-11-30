@@ -310,12 +310,19 @@ Input:
 output:
 
 {
-    "percentage": 66.66666666666666,
-    "final_score": "2/3",
-    "correct_answers": 2,
-    "total_questions": 3
+    "percentage": 83.33333333333334,
+    "final_score": "2.5/3",
+    "correct_answers": 2.5,
+    "total_questions": 3,
+    "scores_info": [
+        {
+            "score_id": 3,
+            "quiz_attempted": true,
+            "attempts_count": 2,
+            "score": "2.5"
+        }
+    ]
 }
-
 
 10. stats for teacher view 
 
@@ -332,11 +339,23 @@ output:
     "no_of_students_registered": 1,
     "no_of_students_attempted_quiz": 1,
     "no_of_students_left": 0,
-    "highest_score": 2,
-    "lowest_score": 2,
-    "mean_score": 2,
-    "median_score": 2,
-    "mode_score": 2
+    "mean_score": 2.5,
+    "median_score": 2.5,
+    "mode_score": 2.5,
+    "top_5_scores": [
+        {
+            "score_id": 3,
+            "student_id": 3,
+            "score": "2.5"
+        }
+    ],
+    "bottom_5_scores": [
+        {
+            "score_id": 3,
+            "student_id": 3,
+            "score": "2.5"
+        }
+    ]
 }
 
 11. updatehelper 
