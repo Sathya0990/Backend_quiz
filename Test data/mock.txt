@@ -338,3 +338,44 @@ output:
     "median_score": 2,
     "mode_score": 2
 }
+
+11. updatehelper 
+
+teacher/updatehelper/<int:course_id>/<int:teacher_id>/
+
+get 
+
+
+{
+    "questions": [
+        {
+            "options": [
+                "3",
+                "4",
+                "5"
+            ],
+            "question": "What is 2 + 2?",
+            "correct_answer": "4"
+        },
+        {
+            "options": [
+                "Madrid",
+                "Paris",
+                "Berlin"
+            ],
+            "question": "What is the capital of France?",
+            "correct_answer": [
+                "Paris",
+                "France"
+            ]
+        },
+        {
+            "options": [
+                "True",
+                "False"
+            ],
+            "question": "Is the sky blue?",
+            "correct_answer": "True"
+        }
+    ]
+}
