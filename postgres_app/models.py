@@ -55,9 +55,10 @@ class scores(models.Model):
 
     course_id=models.ForeignKey(courses, on_delete= models.Model)
 
-    score= models.IntegerField()
+    score= models.CharField(max_length=20)
 
-
+    quiz_attempted = models.BooleanField(default=False)
+    attempts_count = models.PositiveIntegerField(default=0)
 
 
 
