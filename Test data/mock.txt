@@ -1,5 +1,10 @@
-1. Registration end point
+1. Registration 
 
+API:http://127.0.0.1:8000/quiz/registration/
+
+method: POST 
+
+Input:
 
 for teachers,
 
@@ -28,9 +33,22 @@ for students,
     {"course_code": 202, "teacher_id": 2}
   ]
 }
+Output: 
+
+{
+
+    "message": User created successfully
+}
+
 
 
 2. Login end point
+
+API: http://127.0.0.1:8000/quiz/login/
+
+method: POST 
+
+Input:
 
 For teachers,
 
@@ -79,7 +97,7 @@ For students,
 }
 
 
-output:
+Output:
 
 {
     "student_info": {
@@ -109,11 +127,17 @@ output:
     ]
 }
 
-3. 
 
 
-creation of quiz end point
+Teacher API's:
 
+3. creation of quiz end point
+
+API: http://127.0.0.1:8000/teacher/create/
+
+method: POST 
+
+Input:
 
 single answer 
 {
@@ -159,20 +183,32 @@ combined
     "duration": "1 hour"
 }
 
+output:
+
+
+
+
+
 
 4. fetch course_id based on course_code 
 
-get:
-http://127.0.0.1:8000/quiz/course/201
 
-output:
+API: http://127.0.0.1:8000/quiz/course/201
+
+method: GET
+
+Output:
 {
     "course_id": 15
 }
 
+
+
 5. update quiz 
 
-put: http://127.0.0.1:8000/quiz/update/15(course_id_)/10(teacher_id)/
+API:http://127.0.0.1:8000/quiz/update/15(course_id_)/10(teacher_id)/
+
+method:PUT
 
 Input:
 {
@@ -191,7 +227,7 @@ Input:
 
 
 
-output:
+Output:
 {
     message:"quiz updated successfully"
 }
@@ -199,8 +235,9 @@ output:
 
 6. fetch course and teacher courses_info
 
-http://127.0.0.1:8000/quiz/courses/
-get 
+API:http://127.0.0.1:8000/quiz/courses/
+
+method: GET 
 
 output:
 [
@@ -220,9 +257,9 @@ output:
 
 7. delete quiz api
 
-http://127.0.0.1:8000/quiz/delete/15/10/
+API: http://127.0.0.1:8000/quiz/delete/15/10/
 
-delete
+method: DELETE
 
 output:
 {
@@ -248,87 +285,14 @@ output:
     ]
 }
 
-8. Question Api for student 
-
-http://127.0.0.1:8000/quiz/student/15/questions/
-
-get 
-
-Here 15 is course_id which you can get from login api
- 
-
-Output:
-
-{
-    "questions": [
-        {
-            "options": [
-                "3",
-                "4",
-                "5"
-            ],
-            "question": "What is 2 + 2?",
-        },
-        {
-            "options": [
-                "Madrid",
-                "Paris",
-                "Berlin"
-            ],
-            "question": "What is the capital of France?",
-        },
-        {
-            "options": [
-                "True",
-                "False"
-            ],
-            "question": "Is the sky blue?",
-        }
-    ]
-}
-
-
-9. answer validation  based on course_id,student_id 
-
-http://127.0.0.1:8000/quiz/student/15/14/answers/
-post 
-
-15->course_id 
-14->student_id 
 
 
 
-Input:
-{
-    "answers": [
-        {"question": "What is 2 + 2?", "chosen_option": "4"},
-        {"question": "What is the capital of France?", "chosen_option": "Paris"},
-        {"question": "Is the sky blue?", "chosen_option": "True"}
-    ]
-}
+8. stats for teacher view 
 
-output:
+API: http://127.0.0.1:8000/quiz/teacher/statsview/15/
 
-{
-    "percentage": 83.33333333333334,
-    "final_score": "2.5/3",
-    "correct_answers": 2.5,
-    "total_questions": 3,
-    "scores_info": [
-        {
-            "score_id": 3,
-            "quiz_attempted": true,
-            "attempts_count": 2,
-            "score": "2.5"
-        }
-    ]
-}
-
-10. stats for teacher view 
-
-http://127.0.0.1:8000/quiz/teacher/statsview/15/
-
-get 
+method: GET 
 
 15->course_id 
 
@@ -358,11 +322,13 @@ output:
     ]
 }
 
-11. updatehelper 
 
-teacher/updatehelper/<int:course_id>/<int:teacher_id>/
 
-get 
+9. updatehelper 
+
+API: http://127.0.0.1:8000/quiz/teacher/updatehelper/<int:course_id>/<int:teacher_id>/
+
+method: GET 
 
 
 {
@@ -398,3 +364,89 @@ get
         }
     ]
 }
+
+
+
+
+Student API's
+
+
+10. Question Api for student 
+
+API: http://127.0.0.1:8000/quiz/student/15/questions/
+
+method: GET  
+
+Here 15 is course_id which you can get from login api
+ 
+
+Output:
+
+{
+    "questions": [
+        {
+            "options": [
+                "3",
+                "4",
+                "5"
+            ],
+            "question": "What is 2 + 2?",
+        },
+        {
+            "options": [
+                "Madrid",
+                "Paris",
+                "Berlin"
+            ],
+            "question": "What is the capital of France?",
+        },
+        {
+            "options": [
+                "True",
+                "False"
+            ],
+            "question": "Is the sky blue?",
+        }
+    ]
+}
+
+
+
+
+11. answer validation  based on course_id,student_id 
+
+API: http://127.0.0.1:8000/quiz/student/15/14/answers/
+method: POST  
+
+15->course_id 
+14->student_id 
+
+
+
+Input:
+{
+    "answers": [
+        {"question": "What is 2 + 2?", "chosen_option": "4"},
+        {"question": "What is the capital of France?", "chosen_option": "Paris"},
+        {"question": "Is the sky blue?", "chosen_option": "True"}
+    ]
+}
+
+output:
+
+{
+    "percentage": 83.33333333333334,
+    "final_score": "2.5/3",
+    "correct_answers": 2.5,
+    "total_questions": 3,
+    "scores_info": [
+        {
+            "score_id": 3,
+            "quiz_attempted": true,
+            "attempts_count": 2,
+            "score": "2.5"
+        }
+    ]
+}
+
+ 
