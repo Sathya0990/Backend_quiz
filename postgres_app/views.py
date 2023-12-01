@@ -211,7 +211,7 @@ class QuizDeleteAPIView(APIView):
                 } for quiz in quizzes_info]
             }
             courses_info.append(course_info)
-        return Response({'message': 'Quiz deleted successfully','teacher_info':teacher_info,'courses_info': courses_info}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Quiz deleted successfully','teacher_info':teacher_info,'courses_info': courses_info}, status=status.HTTP_200_OK)
         
 
         # return Response({}, status=status.)

@@ -91,8 +91,8 @@ DATABASES = {
         "NAME": "FinalP",
         "HOST":"localhost",
         "PORT":"5432",
-        "USER":"postgres",
-        "PASSWORD":"wxyz12345"
+        # "USER":"postgres",
+        # "PASSWORD":"wxyz12345"
     },
 
 }
